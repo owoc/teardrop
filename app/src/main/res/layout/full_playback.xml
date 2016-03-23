@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C) 2010, 2011 Christopher Eby <kreed@kreed.org>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/current_song_info" >
+        
+		<mp.teardrop.CoverView
+			android:id="@+id/cover_view"
+			android:layout_height="130dp"
+			android:layout_width="130dp"
+			android:background="@color/orchid_color_background" />
+		
+		<LinearLayout 
+		    android:orientation="vertical"
+		    android:layout_width="match_parent"
+		    android:layout_height="130dp"
+		    android:background="@color/orchid_color_primary_dark" >
+		    
+		    <LinearLayout 
+		        android:orientation="vertical"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+				android:paddingLeft="10dp"
+				android:paddingRight="10dp"
+				android:paddingTop="2dp"
+				android:paddingBottom="4dp"
+				android:gravity="left|center_vertical" >
+		        
+			    <TextView 
+			        android:id="@+id/title"
+			        android:layout_width="wrap_content" 
+			        android:layout_height="wrap_content"
+			        android:singleLine="true"
+			        android:ellipsize="end"
+			        android:textSize="18dp"
+			        android:textColor="@color/orchid_text_color_primary"
+			        android:layout_marginBottom="4dp" />
+		        
+			    <TextView 
+			        android:id="@+id/artist"
+			        android:layout_width="wrap_content" 
+			        android:layout_height="wrap_content"
+			        android:singleLine="true"
+			        android:ellipsize="end"
+			        android:textSize="14dp"
+			        android:textColor="@color/orchid_text_color_secondary"
+			        android:layout_marginBottom="3dp" />
+		        
+			    <TextView 
+			        android:id="@+id/album"
+			        android:layout_width="wrap_content" 
+			        android:layout_height="wrap_content"
+			        android:singleLine="true"
+			        android:ellipsize="end"
+			        android:textSize="14dp"
+			        android:textColor="@color/orchid_text_color_secondary" />
+		        
+		    </LinearLayout>
+		    
+			<LinearLayout
+				android:id="@+id/controls_top"
+				android:layout_height="wrap_content"
+				android:layout_width="fill_parent"
+				android:layout_gravity="top"
+				android:orientation="horizontal" >
+				<TextView
+					android:id="@+id/elapsed"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:layout_gravity="center"
+					android:paddingLeft="8dip"
+					android:textSize="14dp"
+					android:textColor="@color/orchid_text_color_primary" />
+				<SeekBar
+					android:id="@+id/seek_bar"
+					android:layout_height="wrap_content"
+					android:layout_width="0px"
+					android:layout_gravity="center"
+					android:paddingTop="5dip"
+					android:paddingBottom="5dip"
+					android:paddingLeft="18dip"
+					android:paddingRight="18dip"
+					android:layout_weight="1"
+					android:thumb="@drawable/apptheme_scrubber_control_selector_holo_dark"
+					android:progressDrawable="@drawable/apptheme_scrubber_progress_horizontal_holo_dark" />
+				<TextView
+					android:id="@+id/duration"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:layout_gravity="center"
+					android:paddingRight="8dip"
+					android:textSize="14dp"
+					android:textColor="@color/orchid_text_color_primary" />
+			</LinearLayout>
+			
+		</LinearLayout>
+		
+	</LinearLayout>
+	
+    <TextView 
+        android:id="@+id/current_song_buffering_message"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:visibility="gone"
+        android:text="@string/buffering"
+        android:gravity="center"
+		android:background="@color/orchid_color_primary_dark" />
+    
+    <RelativeLayout
+        android:layout_height="72dp"
+        android:layout_width="match_parent" >
+    
+		<LinearLayout
+			android:id="@+id/controls_bottom"
+			android:layout_height="40dp"
+			android:layout_width="match_parent"
+			android:layout_alignParentTop="true"
+			android:layout_margin="0dip"
+			android:background="@color/orchid_color_primary"
+			android:orientation="horizontal" >
+	
+			<ImageButton
+				android:id="@+id/previous"
+				android:layout_height="40dp"
+				android:layout_width="0dp"
+				android:layout_weight="1"
+				android:background="@drawable/selectable_item_bg"
+				android:scaleType="center"
+				android:src="@drawable/skip_previous_24"
+				android:contentDescription="@string/previous_song" />
+			<ImageButton
+				android:id="@+id/play_pause"
+				android:layout_height="40dp"
+				android:layout_width="0dp"
+				android:layout_weight="1"
+				android:background="@drawable/selectable_item_bg"
+				android:scaleType="center"
+				android:src="@drawable/play_arrow_24"
+				android:contentDescription="@string/play_pause" />
+			<ImageButton
+				android:id="@+id/next"
+				android:layout_height="40dp"
+				android:layout_width="0dp"
+				android:layout_weight="1"
+				android:background="@drawable/selectable_item_bg"
+				android:scaleType="center"
+				android:src="@drawable/skip_next_24"
+				android:contentDescription="@string/next_song" />
+			<View
+			    android:layout_height="40dp"
+			    android:layout_width="120dp" />
+		    
+		</LinearLayout>
+	
+		<TextView
+		     android:layout_width="match_parent"
+		     android:layout_height="32dp"
+		     android:layout_alignParentBottom="true"
+		     android:background="@color/orchid_color_primary_dark"
+		     android:textColor="@color/orchid_text_color_primary"
+		     android:singleLine="true"
+		     android:ellipsize="end"
+		     android:text="@string/queue"
+		     android:textSize="15sp"
+		     android:gravity="left|center_vertical"
+		     android:paddingLeft="16dp"
+		     android:paddingRight="16dp" />
+		
+		<ImageButton
+			android:id="@+id/new_end_action"
+			android:layout_height="48dp"
+			android:layout_width="48dp"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentBottom="true"
+			android:layout_marginRight="36dp"
+			android:layout_marginBottom="12dp"
+			android:background="@drawable/selectable_round_button_bg_48"
+			android:scaleType="center"
+			android:src="@drawable/no_shuffle_24" />
+	
+	</RelativeLayout>
+	
+    <ListView
+        android:id="@+id/integrated_list"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:background="@color/orchid_color_background"
+	    android:divider="@null"
+	    android:dividerHeight="0dp"
+	    android:listSelector="@android:color/transparent" />
+
+</LinearLayout>

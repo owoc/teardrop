@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C) 2010 Christopher Eby <kreed@kreed.org>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Color used in LibraryActivity list dividers -->
+    <color name="divider_color">#f444</color>
+
+    <string-array name="entry_values">
+
+        <!--
+             Note: even if this was an integer-array, these would be converted
+		     to strings anyway.
+		     http://code.google.com/p/android/issues/detail?id=2096
+        -->
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </string-array>
+    <string-array name="swipe_action_values">
+
+        <!--
+             This must match the order of swipe_action_entries exactly and
+		     contain only values from PlaybackActivity.Action enum.
+        -->
+        <item>Nothing</item>
+        <item>Library</item>
+        <item>PlayPause</item>
+        <item>NextSong</item>
+        <item>PreviousSong</item>
+        <item>NextAlbum</item>
+        <item>PreviousAlbum</item>
+        <item>Repeat</item>
+        <item>Shuffle</item>
+        <item>EnqueueAlbum</item>
+        <item>EnqueueArtist</item>
+        <item>EnqueueGenre</item>
+        <item>ClearQueue</item>
+        <item>ShowQueue</item>
+        <item>ToggleControls</item>
+    </string-array>
+    <string-array name="swipe_action_entries">
+
+        <!-- This must match the order of swipe_action_values exactly -->
+        <item>@string/do_nothing</item>
+        <item>@string/open_library</item>
+        <item>@string/play_pause</item>
+        <item>@string/next_song</item>
+        <item>@string/previous_song</item>
+        <item>@string/next_album</item>
+        <item>@string/previous_album</item>
+        <item>@string/cycle_repeat_mode</item>
+        <item>@string/cycle_shuffle_mode</item>
+        <item>@string/enqueue_current_album</item>
+        <item>@string/enqueue_current_artist</item>
+        <item>@string/enqueue_current_genre</item>
+        <item>@string/clear_queue</item>
+        <item>@string/show_queue</item>
+        <item>@string/toggle_controls</item>
+    </string-array>
+    <string-array name="default_playlist_action_entries">
+        <item>@string/play</item>
+        <item>@string/enqueue</item>
+        <item>@string/last_used_action</item>
+        <item>@string/play_all</item>
+        <item>@string/enqueue_all</item>
+        <item>@string/do_nothing</item>
+    </string-array>
+    <string-array name="default_action_entries">
+        <item>@string/play</item>
+        <item>@string/enqueue</item>
+        <item>@string/last_used_action</item>
+        <item>@string/play_all</item>
+        <item>@string/enqueue_all</item>
+        <item>@string/do_nothing</item>
+        <item>@string/expand</item>
+        <item>@string/play_or_enqueue</item>
+    </string-array>
+    <string-array name="notification_mode_entries">
+        <item>@string/never_show</item>
+        <item>@string/show_when_playing</item>
+        <item>@string/always_show</item>
+    </string-array>
+    <string-array name="notification_action_entries">
+        <item>@string/open_main_activity</item>
+        <item>@string/open_mini_popup</item>
+        <item>@string/open_full_player</item>
+        <item>@string/skip_to_next_song</item>
+    </string-array>
+    <string-array name="display_mode_entries">
+        <item>@string/info_on_cover</item>
+        <item>@string/info_below_cover</item>
+        <item>@string/fixed_info</item>
+    </string-array>
+    <string name="limiter_separator">▶</string>
+    <string name="root_directory">/</string>
+    <string name="parent_directory">..</string>
+
+    <!-- styles -->
+    <style name="Dialog" parent="android:Theme.Holo.Dialog" />
+
+    <style name="AlertDialogItem">
+        <item name="android:textColor">?android:textColorAlertDialogListItem</item>
+    </style>
+
+    <style name="Playback" parent="@style/Theme.Orchid">
+        <item name="android:actionBarStyle">@style/PlaybackActionBar</item>
+    </style>
+
+    <style name="BackActionBar" parent="android:Theme.Holo">
+        <item name="android:actionBarStyle">@style/PlaybackActionBar</item>
+        <item name="android:windowBackground">@color/orchid_color_background</item>
+    </style>
+
+    <style name="PlaybackActionBar" parent="@style/ActionBar.Solid.Orchid">
+        <item name="android:displayOptions">showTitle|homeAsUp</item>
+    </style>
+
+    <style name="Library" parent="android:Theme.Holo">
+        <item name="android:actionBarStyle">@style/LibraryActionBar</item>
+        <!-- <item name="android:actionBarTabStyle">@style/LibraryActionBarTab</item> -->
+    </style>
+
+    <style name="LibraryActionBar" parent="android:Widget.Holo.ActionBar">
+        <item name="android:background">#00000000</item>
+        <item name="android:displayOptions"></item>
+    </style>
+
+    <style name="LibraryActionBarTab" parent="@style/android:Widget.Holo.ActionBar.TabView">
+        <item name="android:background">@drawable/action_bar_tab_bg</item>
+    </style>    
+
+    <!-- additional colors -->
+    <color name="orchid_color_primary">#f333</color>
+    <color name="orchid_color_primary_dark">#f222</color>
+    <color name="orchid_color_background">#ff1a1a1a</color>
+    <color name="orchid_color_accent">#ffc51162</color>
+    <color name="transparency">#00000000</color>
+    <color name="tab_highlight">#ff9ecfbf</color>
+    <color name="library_row_highlight">#1fff</color>
+    <color name="activity_bgcolor">#f333</color>
+    <color name="orchid_text_color_primary">#cfff</color>
+    <color name="orchid_text_color_secondary">#8affffff</color>
+    <color name="orchid_library_separator_color">#33ffffff</color>
+    
+    <!-- testing/debug -->
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    
+</resources>
