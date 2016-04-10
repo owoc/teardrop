@@ -53,7 +53,8 @@ THE SOFTWARE.
         android:gravity="center"
         android:orientation="vertical"
         android:background="#cc050505"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:clickable="true">
 
         <TextView
             android:id="@+id/progress_pane_text"
