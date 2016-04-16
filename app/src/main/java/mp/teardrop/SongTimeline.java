@@ -26,6 +26,7 @@ import java.io.DataOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.ListIterator;
 
 import org.json.JSONArray;
@@ -666,8 +667,11 @@ public final class SongTimeline {
 
 			Song jumpSong = null; */
 			for (CloudSongMetadata cloudSong : cloudSongs) {
-				Song song = new Song(true, cloudSong.path, cloudSong.title, cloudSong.album, cloudSong.artist, 1);
-				if(cloudSong.rgTrack != 0f) song.rgTrack = cloudSong.rgTrack;
+                Song song = new Song(true, cloudSong.path, cloudSong.title, cloudSong.album,
+                        cloudSong.artist, 1);
+                song.dropboxLinkCreated = new Date(); //it was created only seconds ago when the
+                                                      // user picked the songs in the library
+                if(cloudSong.rgTrack != 0f) song.rgTrack = cloudSong.rgTrack;
 				if(cloudSong.rgAlbum != 0f) song.rgAlbum = cloudSong.rgAlbum;
 				song.dbPath = cloudSong.dbPath;
 				timeline.add(song);

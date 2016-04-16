@@ -277,6 +277,12 @@ public class Song implements Comparable<Song> {
 	 * True if the song is a file in Dropbox, false if it's on the local file system.
 	 */
 	public boolean isCloudSong;
+	/**
+	 * Used to determine whether the Dropbox streaming link is still usable (they are valid for 4
+     * hours). This is not preserved in JSON because if a song is being recreated from JSON, the
+     * it's probably a new app session and all links are invalid anyway.
+	 */
+	public Date dropboxLinkCreated;
 	
 	public String cloudRevision;
 	
@@ -346,7 +352,7 @@ public class Song implements Comparable<Song> {
 		this.flags = flags;
 		this.isCloudSong = false;
 	}
-	
+
 	/**
 	 * Initialize and instantly populate a song.
 	 * If the song is not a cloud song (and thus has ids),

@@ -70,6 +70,7 @@ import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 
 import mp.teardrop.SongTimeline.Callback;
@@ -1246,6 +1247,14 @@ public final class PlaybackService extends Service
 				mPreparedMediaPlayer = null;
 			}
 			else if(song.path != null) {
+
+                Date threeHoursAgo = new Date(new Date().getTime() - 10800000);
+
+                if (song.isCloudSong && (song.dropboxLinkCreated == null ||
+                        song.dropboxLinkCreated.before(threeHoursAgo))) {
+                    throw new IOException("Dropbox streaming link is too old.");
+                }
+
 				prepareMediaPlayer(mMediaPlayer, song);
 			}
 
@@ -1299,6 +1308,7 @@ public final class PlaybackService extends Service
 
 					//retry with refreshed streaming link
 					song.path = path;
+                    song.dropboxLinkCreated = new Date();
 					processSong(song, playing);
 
 					return;
