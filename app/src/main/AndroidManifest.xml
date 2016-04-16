@@ -26,12 +26,8 @@ THE SOFTWARE.
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="mp.teardrop"
     android:installLocation="auto"
-    android:versionCode="2"
-    android:versionName="0.9.25.m2" >
-
-    <uses-sdk
-        android:minSdkVersion="16"
-        android:targetSdkVersion="19" />
+    android:versionCode="3"
+    android:versionName="0.9.25.m3" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
