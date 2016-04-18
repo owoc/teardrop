@@ -610,18 +610,34 @@ public final class PlaybackService extends Service
 		return mp;
 	}
 
-	public void prepareMediaPlayer(MediaPlayer mp, Song song) throws IOException{
-		mp.setDataSource(song.path);
-		mp.prepare();
+    public void prepareMediaPlayer(MediaPlayer mp, Song song) throws IOException {
 
-		//TODO what is this and why is it here but not in newer Vanilla versions?
-//		Intent intent = new Intent(AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION);
-//		intent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, mp.getAudioSessionId());
-//		intent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, getPackageName());
-//		sendBroadcast(intent);
+        Date threeHoursAgo = new Date(new Date().getTime() - 10800000);
 
-		applyReplayGain(mp, song);
-	}
+        if (song.isCloudSong && (song.dropboxLinkCreated == null ||
+                song.dropboxLinkCreated.before(threeHoursAgo))) {
+            //FIXME some of this code is duplicated
+            try {
+                String path = LibraryActivity.mApi.media(song.dbPath, true).url;
+                song.path = path;
+                song.dropboxLinkCreated = new Date();
+            } catch (DropboxException e1) {
+                Log.w("OrchidMP", "Failed to refresh a song's streaming link: " + e1.getMessage());
+                throw new IOException("Failed to refresh a song's streaming link.");
+            }
+        }
+
+        mp.setDataSource(song.path);
+        mp.prepare();
+
+        //TODO what is this and why is it here but not in newer Vanilla versions?
+        //		Intent intent = new Intent(AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION);
+        //		intent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, mp.getAudioSessionId());
+        //		intent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, getPackageName());
+        //		sendBroadcast(intent);
+
+        applyReplayGain(mp, song);
+    }
 
 
 	/**
@@ -1247,14 +1263,6 @@ public final class PlaybackService extends Service
 				mPreparedMediaPlayer = null;
 			}
 			else if(song.path != null) {
-
-                Date threeHoursAgo = new Date(new Date().getTime() - 10800000);
-
-                if (song.isCloudSong && (song.dropboxLinkCreated == null ||
-                        song.dropboxLinkCreated.before(threeHoursAgo))) {
-                    throw new IOException("Dropbox streaming link is too old.");
-                }
-
 				prepareMediaPlayer(mMediaPlayer, song);
 			}
 
@@ -1303,7 +1311,6 @@ public final class PlaybackService extends Service
 
 					//TODO: maybe this should re-download all the song's metadata, not just refresh the url? in case it was modified?
 					//better yet, refresh the song's metadata after it has started playing to keep things smooth
-					//String path = LibraryActivity.mApi.media(null, true).url;
 					String path = LibraryActivity.mApi.media(song.dbPath, true).url;
 
 					//retry with refreshed streaming link
