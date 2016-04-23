@@ -846,8 +846,6 @@ public class LibraryActivity extends PlaybackActivity
 
         if (intent.getIntExtra(LibraryAdapter.DATA_TYPE, MediaUtils.TYPE_INVALID) ==
                 MediaUtils.TYPE_DROPBOX) {
-            Toast.makeText(this, "Preparing...", Toast.LENGTH_SHORT)
-                    .show(); //TODO: hardcoded string
             int mode = (action == ACTION_PLAY_ALL || action == ACTION_PLAY) ? ACTION_PLAY :
                     ACTION_ENQUEUE;
             new DropboxPrepareMetadata((String) intent.getStringExtra(LibraryAdapter.DATA_FILE),

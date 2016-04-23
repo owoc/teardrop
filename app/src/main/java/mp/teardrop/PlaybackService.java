@@ -274,6 +274,13 @@ public final class PlaybackService extends Service
 	 * Object used for state-related locking.
 	 */
 	final Object[] mStateLock = new Object[0];
+
+	/**
+	 * A lock used to prevent a race condition when an activity is added and wants to retrieve
+     * the current song's duration just as a new song is being processed.
+	 */
+	private static final Object[] sDurationRefreshLock = new Object[0];
+
 	/**
 	 * Object used for PlaybackService startup waiting.
 	 */
@@ -628,7 +635,10 @@ public final class PlaybackService extends Service
         }
 
         mp.setDataSource(song.path);
-        mp.prepare();
+
+        synchronized (sDurationRefreshLock) {
+            mp.prepare();
+        }
 
         //TODO what is this and why is it here but not in newer Vanilla versions?
         //		Intent intent = new Intent(AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION);
@@ -1922,11 +1932,13 @@ public final class PlaybackService extends Service
 
 		//FIXME Caused crashes when opening FullPlaybackActivity quickly after app startup,
 		//before the PlaybackService could initialize its stuff, this is not currently an issue
-		//because the UI does not allow opening FPA before PS is ready, but that may change
-		if(hasInstance() && sInstance.mMediaPlayer != null) {
-			activity.displayCurrentSongDuration(sInstance.mMediaPlayer.getDuration());
-		}
-	}
+        //because the UI does not allow opening FPA before PS is ready, but that may change
+        synchronized (sDurationRefreshLock) {
+            if (hasInstance() && sInstance.mMediaPlayer != null) {
+                activity.displayCurrentSongDuration(sInstance.mMediaPlayer.getDuration());
+            }
+        }
+    }
 
 	/**
 	 * Remove an Activity from the registered PlaybackActivities
