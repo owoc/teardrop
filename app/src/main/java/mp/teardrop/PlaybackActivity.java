@@ -24,10 +24,12 @@ package mp.teardrop;
 
 import java.io.File;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -87,6 +89,8 @@ public abstract class PlaybackActivity extends Activity
 	{
 		super.onCreate(state);
 
+        setStatusBarColor(this);
+
 		PlaybackService.addActivity(this);
 
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -97,6 +101,25 @@ public abstract class PlaybackActivity extends Activity
 		mLooper = thread.getLooper();
 		mHandler = new Handler(mLooper, this);
 	}
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    static void setStatusBarColor(Activity activity) {
+
+        if(!appIsRunningOnLollipopOrNewer()) {
+            return;
+        }
+
+        Window window = activity.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(
+                activity.getResources().getColor(R.color.orchid_color_primary_dark));
+    }
+
+    private static boolean appIsRunningOnLollipopOrNewer() {
+        int currentApiVersion = android.os.Build.VERSION.SDK_INT;
+        return currentApiVersion >= 21;
+    }
 
 	@Override
 	public void onDestroy()

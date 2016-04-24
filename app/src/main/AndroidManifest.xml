@@ -26,8 +26,8 @@ THE SOFTWARE.
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="mp.teardrop"
     android:installLocation="auto"
-    android:versionCode="5"
-    android:versionName="0.9.25.m5" >
+    android:versionCode="6"
+    android:versionName="0.9.25.m6" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -42,7 +42,7 @@ THE SOFTWARE.
         <activity
             android:name="mp.teardrop.FullPlaybackActivity"
             android:launchMode="singleTask"
-            android:theme="@style/Playback" />
+            android:theme="@style/Theme.Orchid.Child" />
         <activity
             android:name="mp.teardrop.LibraryActivity"
             android:launchMode="singleTask"
@@ -55,7 +55,7 @@ THE SOFTWARE.
         <activity
             android:name="mp.teardrop.PlaylistActivity"
             android:launchMode="singleTask"
-            android:theme="@style/BackActionBar" />
+            android:theme="@style/Theme.Orchid.Child" />
         <activity
             android:name="mp.teardrop.MiniPlaybackActivity"
             android:excludeFromRecents="true"
@@ -146,24 +146,32 @@ THE SOFTWARE.
 
         <activity
             android:name="mp.teardrop.PreferencesActivity"
-            android:theme="@style/BackActionBar" />
+            android:theme="@style/Theme.Orchid.Child" />
         <activity
             android:name="mp.teardrop.PreferencesActivity$ReplayGainActivity"
-            android:theme="@style/BackActionBar" />
-        <activity android:name="mp.teardrop.PreferencesActivity$AudioActivity" />
-        <activity android:name="mp.teardrop.PreferencesActivity$PlaybackActivity" />
-        <activity android:name="mp.teardrop.PreferencesActivity$LibraryPrefsActivity" />
-        <activity android:name="mp.teardrop.PreferencesActivity$NotificationsActivity" />
-        <activity android:name="mp.teardrop.PreferencesActivity$ShakeActivity" />
-        <activity android:name="mp.teardrop.PreferencesActivity$CoverArtActivity" />
-        <activity android:name="mp.teardrop.PreferencesActivity$MiscActivity" />
-        <activity android:name="mp.teardrop.PreferencesActivity$AboutActivity" />
+            android:theme="@style/Theme.Orchid.Child" />
+        <activity android:name="mp.teardrop.PreferencesActivity$AudioActivity"
+                  android:theme="@style/Theme.Orchid.Child" />
+        <activity android:name="mp.teardrop.PreferencesActivity$PlaybackPreferencesActivity"
+                  android:theme="@style/Theme.Orchid.Child" />
+        <activity android:name="mp.teardrop.PreferencesActivity$LibraryPrefsActivity"
+                  android:theme="@style/Theme.Orchid.Child" />
+        <activity android:name="mp.teardrop.PreferencesActivity$NotificationsActivity"
+                  android:theme="@style/Theme.Orchid.Child" />
+        <activity android:name="mp.teardrop.PreferencesActivity$ShakeActivity"
+                  android:theme="@style/Theme.Orchid.Child" />
+        <activity android:name="mp.teardrop.PreferencesActivity$CoverArtActivity"
+                  android:theme="@style/Theme.Orchid.Child" />
+        <activity android:name="mp.teardrop.PreferencesActivity$MiscActivity"
+                  android:theme="@style/Theme.Orchid.Child" />
+        <activity android:name="mp.teardrop.PreferencesActivity$AboutActivity"
+                  android:theme="@style/Theme.Orchid.Child" />
         <activity
             android:name="mp.teardrop.TabOrderActivity"
-            android:theme="@style/BackActionBar" />
+            android:theme="@style/Theme.Orchid.Child" />
         <activity
             android:name="mp.teardrop.FilebrowserStartActivity"
-            android:theme="@style/BackActionBar" />
+            android:theme="@style/Theme.Orchid.Child" />
 
         <!-- Dropbox access -->
         <activity

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Orchid" parent="@android:style/Theme.Holo">
+        <item name="android:actionBarItemBackground">@drawable/selectable_background_orchid</item>
+        <item name="android:popupMenuStyle">@style/PopupMenu.Orchid</item>
+        <item name="android:actionBarStyle">@style/ActionBar.Solid.Orchid</item>
+        <item name="android:actionModeBackground">@drawable/cab_background_top_orchid</item>
+        <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_orchid</item>
+        <item name="android:colorPrimary">@color/orchid_color_primary</item>
+        <item name="android:windowBackground">@color/orchid_color_background</item>
+
+        <item name="android:actionOverflowButtonStyle">@style/teardropOverflow</item>
+    </style>
+
+    <style name="Theme.Orchid.Child" parent="Theme.Orchid">
+        <item name="android:homeAsUpIndicator">@drawable/white_left_arrow</item>
+        <item name="android:actionBarStyle">@style/ActionBar.Solid.Orchid.Child</item>
+    </style>
+
+    <style name="ActionBar.TitleTextStyle.Teardrop"
+           parent="@android:style/TextAppearance.Material.Widget.ActionBar.Title">
+        <item name="@android:textSize">18dp</item>
+    </style>
+
+</resources>

@@ -18,7 +18,8 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+THE SOFTWARE.
+
 -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -160,6 +161,7 @@ THE SOFTWARE.
     <color name="orchid_color_background">#ff1a1a1a</color>
     <color name="orchid_color_accent">#ffc51162</color>
     <color name="transparency">#00000000</color>
+    <color name="white">#ffff</color>
     <color name="tab_highlight">#ff9ecfbf</color>
     <color name="library_row_highlight">#1fff</color>
     <color name="activity_bgcolor">#f333</color>

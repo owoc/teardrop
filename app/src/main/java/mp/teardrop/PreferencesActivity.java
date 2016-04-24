@@ -70,6 +70,10 @@ public class PreferencesActivity extends PreferenceActivity {
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+
+        PlaybackActivity.setStatusBarColor(this);
+
+		setTitle(R.string.settings);
 	}
 
 	@Override
@@ -162,7 +166,7 @@ public class PreferencesActivity extends PreferenceActivity {
 		}
 	}
 
-	public static class PlaybackActivity extends PreferenceActivity {
+	public static class PlaybackPreferencesActivity extends PreferenceActivity {
 		@SuppressWarnings("deprecation")
 		@Override
 		public void onCreate(Bundle savedInstanceState)
