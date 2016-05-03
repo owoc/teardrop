@@ -25,7 +25,6 @@ android {
 
 dependencies {
     compile 'com.android.support:support-v4:23.2.1'
-    compile files('libs/dropbox-android-sdk-1.6.1.jar')
-    compile files('libs/httpmime-4.0.3.jar')
+    compile files('libs/dropbox-android-sdk-1.6.3.jar')
     compile files('libs/json_simple-1.1.jar')
 }
