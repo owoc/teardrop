@@ -108,7 +108,7 @@ public class DropboxAdapter extends BaseAdapter implements LibraryAdapter {
         if (!mLinkedWithDropbox) {
             View view = mInflater.inflate(R.layout.library_row_link_with_dropbox, null);
             TextView textView = (TextView) view.findViewById(R.id.text);
-            textView.setText("Link with Dropbox");
+            textView.setText(R.string.link_with_dropbox);
             return view;
         } else {
 

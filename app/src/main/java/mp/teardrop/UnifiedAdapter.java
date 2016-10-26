@@ -18,6 +18,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -34,12 +35,15 @@ public class UnifiedAdapter
 	         //, View.OnClickListener
 {
 	static final int ID_LINK_TO_PARENT_DIR = -10;
+
+    private final LayoutInflater mInflater;
+    private boolean mHasPermissionToReadStorage;
 	
 	/**
 	 * The owner LibraryActivity.
 	 */
 	final LibraryActivity mActivity;
-	/**
+    /**
 	 * The currently active limiter, set by a row expander being clicked.
 	 */
 	private Limiter mLimiter;
@@ -74,16 +78,21 @@ public class UnifiedAdapter
 	 * @param activity The LibraryActivity that will contain this adapter.
 	 * Called on to requery this adapter when the contents of the directory
 	 * change.
-	 * @param limiter An initial limiter to set. If none is given,
-	 * a few items of each type will be displayed, with links to more.
-	 */
-	public UnifiedAdapter(LibraryActivity activity, Limiter limiter)
-	{
-		mActivity = activity;
-		mLimiter = limiter;
+     * @param limiter An initial limiter to set. If none is given,
+     * a few items of each type will be displayed, with links to more.
+     * @param hasPermissionToReadStorage Whether the app has permission to read internal storage.
+     *
+     */
+    public UnifiedAdapter(LibraryActivity activity, Limiter limiter,
+                          boolean hasPermissionToReadStorage) {
+        mActivity = activity;
+        mLimiter = limiter;
+        mInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		setLimiter(limiter);
-	}
+        mHasPermissionToReadStorage = hasPermissionToReadStorage;
+
+        setLimiter(limiter);
+    }
 
 	@Override
 	public Object query()
@@ -358,6 +367,10 @@ public class UnifiedAdapter
 	@Override
 	public View getView(int pos, View convertView, ViewGroup parent) //TODO: optimize this a little
 	{
+        if(!mHasPermissionToReadStorage) {
+            return getNoPermissionView();
+        }
+
 		// always create a new view to get rid of old touch feedback
 		View view = null;
 		ViewHolder holder = new ViewHolder();
@@ -532,6 +545,13 @@ public class UnifiedAdapter
 
 	}
 
+	private View getNoPermissionView() {
+        View view = mInflater.inflate(R.layout.library_row_link_with_dropbox, null);
+        TextView textView = (TextView) view.findViewById(R.id.text);
+        textView.setText(R.string.link_with_dropbox);
+        return view;
+    }
+	
 	@Override
 	public void setLimiter(Limiter limiter)
 	{

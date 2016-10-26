@@ -29,13 +29,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.jar.Manifest;
 
 import junit.framework.Assert;
 import android.content.ContentResolver;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 /**
@@ -328,29 +332,42 @@ public class MediaUtils {
 	}
 
 	/**
-	 * Determine if any songs are available from the library.
-	 *
-	 * @param resolver A ContentResolver to use.
-	 * @return True if it's possible to retrieve any songs, false otherwise. For
-	 * example, false could be returned if there are no songs in the library.
-	 */
-	public static boolean isSongAvailable(ContentResolver resolver)
-	{
-		if (sSongCount == -1) {
-			Uri media = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-			String selection = MediaStore.Audio.Media.IS_MUSIC;
-			selection += " AND length(_data)";
-			Cursor cursor = resolver.query(media, new String[]{"count(_id)"}, selection, null, null);
-			if (cursor == null) {
+     * Determine if any songs are available from the library.
+     *
+     * @param resolver A ContentResolver to use.
+     * @param context The context that is trying to access the songs. Needed to check for storage
+     *                permission.
+     * @return True if it's possible to retrieve any songs, false otherwise. For
+     * example, false could be returned if there are no songs in the library.
+     */
+    public static boolean isSongAvailable(Context context, ContentResolver resolver) {
+
+        if (sSongCount == -1) {
+
+			if (!hasPermissionToReadStorage(context)) {
 				sSongCount = 0;
 			} else {
-				cursor.moveToFirst();
-				sSongCount = cursor.getInt(0);
-				cursor.close();
-			}
-		}
+				Uri media = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                String selection = MediaStore.Audio.Media.IS_MUSIC;
+                selection += " AND length(_data)";
+                Cursor cursor = resolver.query(media, new String[]{"count(_id)"}, selection, null, null);
+                if (cursor == null) {
+                    sSongCount = 0;
+                } else {
+                    cursor.moveToFirst();
+                    sSongCount = cursor.getInt(0);
+                    cursor.close();
+                }
+            }
+        }
 
-		return sSongCount != 0;
+        return sSongCount != 0;
+    }
+
+	public static boolean hasPermissionToReadStorage(Context context) {
+		return ContextCompat.checkSelfPermission(context,
+                android.Manifest.permission.READ_EXTERNAL_STORAGE) ==
+                PackageManager.PERMISSION_GRANTED;
 	}
 
 	/**

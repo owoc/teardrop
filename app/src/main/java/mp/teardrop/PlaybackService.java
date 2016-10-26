@@ -56,6 +56,7 @@ import android.os.Process;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
@@ -1222,7 +1223,7 @@ public final class PlaybackService extends Service
 			song = mTimeline.shiftCurrentSong(delta);
 		mCurrentSong = song;
 		if (song == null || song.id == -1 || song.path == null) {
-			if (MediaUtils.isSongAvailable(getContentResolver())) {
+			if (MediaUtils.isSongAvailable(this, getContentResolver())) {
 				int flag = FLAG_EMPTY_QUEUE;
 				synchronized (mStateLock) {
 					updateState((mState | flag) & ~FLAG_NO_MEDIA);
@@ -1403,7 +1404,10 @@ public final class PlaybackService extends Service
 	public void onPrepared(MediaPlayer mp) {
 		if(shouldCountSongStart) {
 			Song song = mTimeline.getSong(0);
-			mPlayCounts.countSong(song, 1); //increase the song's popularity slightly when it starts playing
+			if (!song.isCloudSong) {
+				mPlayCounts.countSong(song,
+						1); //increase the song's popularity slightly when it starts playing
+			}
 		}
 		shouldCountSongStart = !shouldCountSongStart;
 
@@ -1453,7 +1457,7 @@ public final class PlaybackService extends Service
 
 	public void onMediaChange()
 	{
-		if (MediaUtils.isSongAvailable(getContentResolver())) {
+		if (MediaUtils.isSongAvailable(this, getContentResolver())) {
 			if ((mState & FLAG_NO_MEDIA) != 0)
 				setCurrentSong(0, false);
 		} else {

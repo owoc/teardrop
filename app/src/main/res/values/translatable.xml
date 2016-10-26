@@ -85,6 +85,8 @@ THE SOFTWARE.
 	<string name="empty_songs_section">Most played songs will appear here.</string>
 	<string name="loading_cloud_folder">Loading folder…</string>
 	<string name="preparing_cloud_songs">Preparing songs for playback…</string>
+	<string name="link_with_dropbox">Tap to link with Dropbox</string>
+	<string name="grant_storage_access">Tap to grant access to storage</string>
 	<string name="unlink_with_dropbox">Unlink with Dropbox</string>
 	<string name="playback_queue_empty">Playback queue is empty.</string>
 	<string name="playback_queue_refresh">Refreshing playback queue…</string>

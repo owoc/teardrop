@@ -283,7 +283,7 @@ public class LibraryPagerAdapter
 	@Override
 	public Object instantiateItem(ViewGroup container, int position)
 	{
-		int type = mTabOrder[position];
+		final int type = mTabOrder[position];
 		ViewGroup containingLayout = mContainingLayouts[type];
 
 		if (containingLayout == null) {
@@ -293,41 +293,51 @@ public class LibraryPagerAdapter
 			
 			containingLayout = (RelativeLayout) inflater.inflate(R.layout.listview, null);
 
-			switch (type) {
-			case MediaUtils.TYPE_FILE:
-				adapter = mFilesAdapter = new FileSystemAdapter(activity, null);
-				break;
-			case MediaUtils.TYPE_UNIFIED:
-				adapter = mUnifiedAdapter = new UnifiedAdapter(activity, null);
-				break;
-			case MediaUtils.TYPE_DROPBOX:				
-				adapter = mDropboxAdapter = new DropboxAdapter(activity, null);
-				//if linked with Dropbox, query the root
-				//TODO: maybe use a field in activity or somewhere to save linked state instead of checking prefs here
-		        SharedPreferences prefs = activity.getSharedPreferences(LibraryActivity.ACCOUNT_PREFS_NAME, 0);
-		        String key = prefs.getString(LibraryActivity.ACCESS_KEY_NAME, null);
-		        String secret = prefs.getString(LibraryActivity.ACCESS_SECRET_NAME, null);
-		        
-		        /* if we're linked with Dropbox, show the loading message and retrieve the root folder's contents */
-		        if (!(key == null || secret == null || key.length() == 0 || secret.length() == 0)) {
-		        	
-					View screen = containingLayout.findViewById(R.id.list_view_loading_screen);
-					screen.setOnClickListener(new View.OnClickListener() { //will stick for the entire session
-						@Override
-						public void onClick(View v) { }
-					});
-					screen.setVisibility(View.VISIBLE);
-					
-					
-			    	activity.requeryDropbox(null);
-		        }
-		        
-				break;
-			default:
-				throw new IllegalArgumentException("Invalid media type: " + type);
-			}
-			
-			mLimiterScroller = (HorizontalScrollView) containingLayout.findViewById(R.id.new_limiter_scroller);
+            boolean hasPermissionToReadStorage =
+                    MediaUtils.hasPermissionToReadStorage(activity);
+
+            switch (type) {
+                case MediaUtils.TYPE_FILE:
+                    adapter = mFilesAdapter = new FileSystemAdapter(activity, null);
+                    break;
+                case MediaUtils.TYPE_UNIFIED:
+                    adapter =
+                            mUnifiedAdapter =
+                                    new UnifiedAdapter(activity, null, hasPermissionToReadStorage);
+                    break;
+                case MediaUtils.TYPE_DROPBOX:
+                    adapter = mDropboxAdapter = new DropboxAdapter(activity, null);
+                    //if linked with Dropbox, query the root
+                    //TODO: maybe use a field in activity or somewhere to save linked state instead of checking prefs here
+                    SharedPreferences prefs =
+                            activity.getSharedPreferences(LibraryActivity.ACCOUNT_PREFS_NAME, 0);
+                    String key = prefs.getString(LibraryActivity.ACCESS_KEY_NAME, null);
+                    String secret = prefs.getString(LibraryActivity.ACCESS_SECRET_NAME, null);
+
+		            /* if we're linked with Dropbox, show the loading message and retrieve the root
+                       folder's contents */
+                    if (!(key == null || secret == null || key.length() == 0 ||
+                            secret.length() == 0)) {
+
+                        View screen = containingLayout.findViewById(R.id.list_view_loading_screen);
+                        screen.setOnClickListener(
+                                new View.OnClickListener() { //will stick for the entire session
+                                    @Override
+                                    public void onClick(View v) {
+                                    }
+                                });
+                        screen.setVisibility(View.VISIBLE);
+
+
+                        activity.requeryDropbox(null);
+                    }
+
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid media type: " + type);
+            }
+
+            mLimiterScroller = (HorizontalScrollView) containingLayout.findViewById(R.id.new_limiter_scroller);
 			ListView view = (ListView) containingLayout.findViewById(R.id.actual_list_view);
 			view.setOnCreateContextMenuListener(this);
 			view.setOnItemClickListener(this);
@@ -337,7 +347,12 @@ public class LibraryPagerAdapter
 
 			mAdapters[type] = adapter;
 			mContainingLayouts[type] = containingLayout;
-			mRequeryNeeded[type] = true;
+
+            if(type == MediaUtils.TYPE_UNIFIED && !hasPermissionToReadStorage) {
+                mRequeryNeeded[type] = false;
+            } else {
+                mRequeryNeeded[type] = true;
+            }
 
 		}
 
