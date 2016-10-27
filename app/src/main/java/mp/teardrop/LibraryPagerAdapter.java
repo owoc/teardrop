@@ -293,9 +293,6 @@ public class LibraryPagerAdapter
 			
 			containingLayout = (RelativeLayout) inflater.inflate(R.layout.listview, null);
 
-            boolean hasPermissionToReadStorage =
-                    MediaUtils.hasPermissionToReadStorage(activity);
-
             switch (type) {
                 case MediaUtils.TYPE_FILE:
                     adapter = mFilesAdapter = new FileSystemAdapter(activity, null);
@@ -303,7 +300,7 @@ public class LibraryPagerAdapter
                 case MediaUtils.TYPE_UNIFIED:
                     adapter =
                             mUnifiedAdapter =
-                                    new UnifiedAdapter(activity, null, hasPermissionToReadStorage);
+                                    new UnifiedAdapter(activity, null);
                     break;
                 case MediaUtils.TYPE_DROPBOX:
                     adapter = mDropboxAdapter = new DropboxAdapter(activity, null);
@@ -337,7 +334,8 @@ public class LibraryPagerAdapter
                     throw new IllegalArgumentException("Invalid media type: " + type);
             }
 
-            mLimiterScroller = (HorizontalScrollView) containingLayout.findViewById(R.id.new_limiter_scroller);
+			mLimiterScroller =
+					(HorizontalScrollView) containingLayout.findViewById(R.id.new_limiter_scroller);
 			ListView view = (ListView) containingLayout.findViewById(R.id.actual_list_view);
 			view.setOnCreateContextMenuListener(this);
 			view.setOnItemClickListener(this);
@@ -348,11 +346,7 @@ public class LibraryPagerAdapter
 			mAdapters[type] = adapter;
 			mContainingLayouts[type] = containingLayout;
 
-            if(type == MediaUtils.TYPE_UNIFIED && !hasPermissionToReadStorage) {
-                mRequeryNeeded[type] = false;
-            } else {
-                mRequeryNeeded[type] = true;
-            }
+			mRequeryNeeded[type] = true;
 
 		}
 

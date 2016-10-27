@@ -60,4 +60,6 @@ class MediaInfoHolder {
 	ArrayList<AlbumInfo> albums = new ArrayList<AlbumInfo>();
 	ArrayList<SongInfo> songs = new ArrayList<SongInfo>();
 	ArrayList<PlaylistInfo> playlists = new ArrayList<PlaylistInfo>();
+
+	boolean permissionToReadStorageWasDenied = false;
 }

@@ -37,7 +37,6 @@ public class UnifiedAdapter
 	static final int ID_LINK_TO_PARENT_DIR = -10;
 
     private final LayoutInflater mInflater;
-    private boolean mHasPermissionToReadStorage;
 	
 	/**
 	 * The owner LibraryActivity.
@@ -80,16 +79,12 @@ public class UnifiedAdapter
 	 * change.
      * @param limiter An initial limiter to set. If none is given,
      * a few items of each type will be displayed, with links to more.
-     * @param hasPermissionToReadStorage Whether the app has permission to read internal storage.
      *
      */
-    public UnifiedAdapter(LibraryActivity activity, Limiter limiter,
-                          boolean hasPermissionToReadStorage) {
+    public UnifiedAdapter(LibraryActivity activity, Limiter limiter) {
         mActivity = activity;
         mLimiter = limiter;
         mInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        mHasPermissionToReadStorage = hasPermissionToReadStorage;
 
         setLimiter(limiter);
     }
@@ -98,6 +93,13 @@ public class UnifiedAdapter
 	public Object query()
 	{
 		MediaInfoHolder mih = new MediaInfoHolder();
+
+
+        if(!MediaUtils.hasPermissionToReadStorage(mActivity)) {
+            mih.permissionToReadStorageWasDenied = true;
+			return mih;
+        }
+
 		
 		if(mLimiter == null) {
 			/* get top artists */
@@ -294,6 +296,10 @@ public class UnifiedAdapter
 	@Override
 	public void commitQuery(Object data)
 	{
+        if(data == null) {
+            return;
+        }
+
 		mMih = (MediaInfoHolder) data;
 		
 		mPosArtistHeading = mMih.artists.isEmpty() ? -1 : 0;
@@ -330,8 +336,13 @@ public class UnifiedAdapter
 	@Override
 	public int getCount()
 	{
-		if(mMih == null)
-			return 0;
+		if(mMih == null) {
+            return 0;
+        }
+
+        if(mMih.permissionToReadStorageWasDenied) {
+            return 1;
+        }
 		
 		int count = 0;
 		
@@ -367,7 +378,7 @@ public class UnifiedAdapter
 	@Override
 	public View getView(int pos, View convertView, ViewGroup parent) //TODO: optimize this a little
 	{
-        if(!mHasPermissionToReadStorage) {
+        if(mMih.permissionToReadStorageWasDenied) {
             return getNoPermissionView();
         }
 
@@ -384,9 +395,9 @@ public class UnifiedAdapter
 				
 				if(mLimiter == null && mPosArtistFirst == mPosArtistLast) { //there are no artists, just the more link
 					view = mActivity.getLayoutInflater().inflate(R.layout.local_library_empty_section_first, null);
-					TextView textView = (TextView) (((LinearLayout) view).findViewById(R.id.empty_section_heading));
+					TextView textView = (TextView) (view.findViewById(R.id.empty_section_heading));
 					textView.setText(R.string.artists);
-					textView = (TextView) (((LinearLayout) view).findViewById(R.id.empty_section_content));
+					textView = (TextView) (view.findViewById(R.id.empty_section_content));
 					textView.setText(R.string.empty_artists_section);
 					textView.setCompoundDrawablesWithIntrinsicBounds(mActivity.getResources().getDrawable(R.drawable.artist_24), null, null, null);
 				} else {
@@ -546,9 +557,9 @@ public class UnifiedAdapter
 	}
 
 	private View getNoPermissionView() {
-        View view = mInflater.inflate(R.layout.library_row_link_with_dropbox, null);
+        View view = mInflater.inflate(R.layout.library_row_storage_permission, null);
         TextView textView = (TextView) view.findViewById(R.id.text);
-        textView.setText(R.string.link_with_dropbox);
+        textView.setText(R.string.grant_storage_access);
         return view;
     }
 	
@@ -586,7 +597,13 @@ public class UnifiedAdapter
 	@Override
 	public Intent createData(View view)
 	{
+
 		Intent intent = new Intent();
+
+        if(mMih.permissionToReadStorageWasDenied) {
+            intent.putExtra(LibraryAdapter.DATA_LINK_WITH_DROPBOX, true);
+            return intent;
+        }
 		
 		ViewHolder holder = (ViewHolder)view.getTag();
 		
