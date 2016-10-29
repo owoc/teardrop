@@ -558,11 +558,12 @@ public class LibraryPagerAdapter
 		switch (message.what) {
 		case MSG_RUN_QUERY: {
 			//we are on the worker thread here
-			LibraryAdapter adapter = (LibraryAdapter) message.obj;
-			Handler handler = mUiHandler;
-			handler.sendMessage(handler.obtainMessage(MSG_COMMIT_QUERY, adapter.getMediaType(), 0, adapter.query()));
-			break;
-		}
+            LibraryAdapter adapter = (LibraryAdapter) message.obj;
+            Handler handler = mUiHandler;
+            handler.sendMessage(handler.obtainMessage(MSG_COMMIT_QUERY, adapter.getMediaType(), 0,
+                    adapter.query()));
+            break;
+        }
 		case MSG_COMMIT_QUERY: {
 			//we are on the UI thread here
 			int index = message.arg1;
@@ -601,6 +602,17 @@ public class LibraryPagerAdapter
 
 		return true;
 	}
+
+
+    public void requeryLocalAdapters() {
+        for (int i = 0; i < mTabCount; i++) {
+            int type = mTabOrder[i];
+            if (type != MediaUtils.TYPE_DROPBOX) {
+                requestRequery(mAdapters[type]);
+            }
+        }
+    }
+
 
 	/**
 	 * Requery the given adapter. If it is the current adapter, requery

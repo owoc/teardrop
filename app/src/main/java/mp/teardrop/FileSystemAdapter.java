@@ -53,6 +53,8 @@ public class FileSystemAdapter
 	private static final Pattern FILE_SEPARATOR = Pattern.compile(File.separator);
 	static final int ID_LINK_TO_PARENT_DIR = -10;
 
+    private boolean mPermissionToReadStorageWasDenied = false;
+
 	/**
 	 * The owner LibraryActivity.
 	 */
@@ -152,6 +154,12 @@ public class FileSystemAdapter
 	@Override
 	public Object query()
 	{
+        if (!MediaUtils.hasPermissionToReadStorage(mActivity)) {
+            MediaInfoHolder mih = new MediaInfoHolder();
+            mih.permissionToReadStorageWasDenied = true;
+            return mih;
+        }
+
 		File file = mLimiter == null ? new File("/") : (File)mLimiter.data;
 
 		if (mFileObserver == null) {
@@ -167,9 +175,25 @@ public class FileSystemAdapter
 	@Override
 	public void commitQuery(Object data)
 	{
-		mFiles = (File[])data;
+        if(queryResultIndicatesNoPermission(data)) {
+            mPermissionToReadStorageWasDenied = true;
+            mFiles = null;
+        } else {
+            mPermissionToReadStorageWasDenied = false;
+            mFiles = (File[]) data;
+        }
 		notifyDataSetInvalidated();
 	}
+
+    private static boolean queryResultIndicatesNoPermission(Object queryResult) {
+        if(!(queryResult instanceof MediaInfoHolder)) {
+            return false;
+        }
+        if(((MediaInfoHolder) queryResult).permissionToReadStorageWasDenied) {
+            return true;
+        }
+        throw new IllegalArgumentException("Incorrect data passed to file system adapter.");
+    }
 
 	@Override
 	public void clear()
@@ -181,8 +205,13 @@ public class FileSystemAdapter
 	@Override
 	public int getCount()
 	{
-		if (mFiles == null)
-			return 0;
+        if(mPermissionToReadStorageWasDenied) {
+            return 1;
+        }
+
+		if (mFiles == null) {
+            return 0;
+        }
 		
 		Limiter limiter = getLimiter();
 		
@@ -212,6 +241,10 @@ public class FileSystemAdapter
 	@Override
 	public View getView(int pos, View convertView, ViewGroup parent)
 	{
+
+        if(mPermissionToReadStorageWasDenied) {
+            return getNoPermissionView();
+        }
 		
 		View view;
 		ViewHolder holder;
@@ -247,6 +280,13 @@ public class FileSystemAdapter
 		
 		return view;
 	}
+
+    private View getNoPermissionView() {
+        View view = mInflater.inflate(R.layout.library_row_storage_permission, null);
+        TextView textView = (TextView) view.findViewById(R.id.text);
+        textView.setText(R.string.grant_storage_access);
+        return view;
+    }
 
 	@Override
 	public void setFilter(String filter)
@@ -317,19 +357,23 @@ public class FileSystemAdapter
 	@Override
 	public Intent createData(View view)
 	{
-		
+
+		Intent intent = new Intent();
+
+		if(mPermissionToReadStorageWasDenied) {
+			intent.putExtra(LibraryAdapter.DATA_REQUEST_STORAGE_ACCESS, true);
+			return intent;
+		}
+
 		ViewHolder holder = (ViewHolder)view.getTag();
 		
-		if(holder.id == ID_LINK_TO_PARENT_DIR)  {//the id for parent directory links
-			Intent intent1 = new Intent();
-			intent1.putExtra(LibraryAdapter.DATA_GO_UP, true);
-			
-			return intent1;
+		if(holder.id == ID_LINK_TO_PARENT_DIR)  { //the id for parent directory links
+			intent.putExtra(LibraryAdapter.DATA_GO_UP, true);
+			return intent;
 		}
 		
 		File file = mFiles[holder.id];
 
-		Intent intent = new Intent();
 		intent.putExtra(LibraryAdapter.DATA_TYPE, MediaUtils.TYPE_FILE);
 		intent.putExtra(LibraryAdapter.DATA_ID, (long)holder.id);
 		intent.putExtra(LibraryAdapter.DATA_TITLE, holder.text.getText().toString());

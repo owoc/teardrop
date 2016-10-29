@@ -36,12 +36,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -51,6 +53,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
@@ -146,6 +149,8 @@ public class LibraryActivity extends PlaybackActivity
      */
     static final String TAG_GENRES_ROOT = "albumsRoot";
 
+    private static final int PERMISSION_REQUEST_CODE = 1;
+
     public ViewPager mViewPager;
 
     private View mActionControls;
@@ -195,13 +200,32 @@ public class LibraryActivity extends PlaybackActivity
     static DropboxAPI<AndroidAuthSession> mApi;
 
 
-    public void linkOrUnlink() {
+    private void linkOrUnlink() {
         if (mApi.getSession().isLinked()) {
             mApi.getSession().unlink();
             clearKeys();
             updateUi(false);
         } else {
             mApi.getSession().startOAuth2Authentication(this);
+        }
+    }
+
+
+    private void requestStorageAccess() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                PERMISSION_REQUEST_CODE);
+    }
+
+    //on API levels 23 and above, this will actually override a superclass method
+    public void onRequestPermissionsResult(int requestCode, String permissions[],
+                                           int[] grantResults) {
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                mPagerAdapter.requeryLocalAdapters();
+
+            }
         }
     }
 
@@ -924,6 +948,11 @@ public class LibraryActivity extends PlaybackActivity
             return;
         }
 
+        if (rowData.getBooleanExtra(LibraryAdapter.DATA_REQUEST_STORAGE_ACCESS, false)) {
+            requestStorageAccess();
+            return;
+        }
+
         if (rowData.getBooleanExtra(LibraryAdapter.DATA_LINK_WITH_DROPBOX, false)) {
             linkOrUnlink();
             return;
@@ -1564,7 +1593,8 @@ public class LibraryActivity extends PlaybackActivity
     protected void onStateChange(int state, int toggled) {
         super.onStateChange(state, toggled);
 
-        if ((toggled & PlaybackService.FLAG_EMPTY_QUEUE) != 0) {
+        if (((toggled & PlaybackService.FLAG_EMPTY_QUEUE) != 0) ||
+                ((toggled & PlaybackService.FLAG_NO_MEDIA) != 0)) {
             ((TextView) findViewById(R.id.bottom_bar_hint)).setText(R.string.playback_queue_empty);
         }
 

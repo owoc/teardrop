@@ -135,7 +135,8 @@ public interface LibraryAdapter extends ListAdapter {
 	public static final String DATA_GO_TO_ALL_PLAYLISTS = "goToAllPlaylists";
 	public static final String DATA_GO_TO_ALL_GENRES = "goToAllGenres";
 	public static final String DATA_LINK_WITH_DROPBOX = "linkWithDropbox";
-	
+	public static final String DATA_REQUEST_STORAGE_ACCESS = "requestStorageAccess";
+
 	/**
 	 * Extra for row data: media type. type: int. One of MediaUtils.TYPE_*.
 	 */

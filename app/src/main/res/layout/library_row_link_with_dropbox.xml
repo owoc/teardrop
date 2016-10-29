@@ -2,13 +2,14 @@
 
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="horizontal"
+	android:orientation="vertical"
 	android:layout_width="match_parent"
-	android:layout_height="wrap_content" >
+	android:layout_height="wrap_content"
+	android:gravity="center_horizontal|top"
+	android:background="@drawable/selectable_item_bg">
 	<TextView
 		android:id="@+id/text"
-		android:background="@drawable/selectable_item_bg"
-		android:singleLine="true"
+		android:maxLines="1"
 		android:ellipsize="end"
 		android:textSize="18sp"
 		android:paddingLeft="12dp"
@@ -17,7 +18,7 @@
 		android:paddingTop="10dp"
 		android:textColor="#cfff"
 		android:gravity="center"
-		android:layout_width="match_parent"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:drawableTop="@drawable/dropbox_glyph_gray"
 		android:drawablePadding="0dp" />

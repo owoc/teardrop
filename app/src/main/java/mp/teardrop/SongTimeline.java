@@ -291,9 +291,7 @@ public final class SongTimeline {
 
 	/**
 	 * Initializes the timeline with data read from the stream. Data should have
-	 * been saved by a call to {@link SongTimeline#writeState(DataOutputStream)}.
-	 *
-	 * @param in The stream to read from.
+	 * been saved by a call to {@link SongTimeline#writeState}.
 	 */
 	public void readState(SharedPreferences prefs) throws JSONException
 	{

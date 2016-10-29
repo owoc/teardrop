@@ -601,7 +601,7 @@ public class UnifiedAdapter
 		Intent intent = new Intent();
 
         if(mMih.permissionToReadStorageWasDenied) {
-            intent.putExtra(LibraryAdapter.DATA_LINK_WITH_DROPBOX, true);
+            intent.putExtra(LibraryAdapter.DATA_REQUEST_STORAGE_ACCESS, true);
             return intent;
         }
 		

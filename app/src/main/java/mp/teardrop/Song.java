@@ -357,8 +357,6 @@ public class Song implements Comparable<Song> {
 	 * Initialize and instantly populate a song.
 	 * If the song is not a cloud song (and thus has ids),
 	 * they will have to be set manually after using this constructor.
-	 * 
-	 * @param duration Length of the song in milliseconds.
 	 */
 	public Song(boolean isCloudSong, String dropboxPath, String title, String album, String artist, int trackNumber) {
 		this.isCloudSong = isCloudSong;
@@ -390,8 +388,14 @@ public class Song implements Comparable<Song> {
 				song.albumId = -1337;
 				song.artistId = -1337;
 				song.dbPath = jsonBourne.getString("dbPath");
-			} else {
-				song.id = jsonBourne.getLong("id");
+                song.rgTrack = //TODO: make sure there isn't any loss of precision
+                        jsonBourne.has("rgTrack") ? new Float(jsonBourne.getDouble("rgTrack")) :
+                                null;
+                song.rgAlbum =
+                        jsonBourne.has("rgAlbum") ? new Float(jsonBourne.getDouble("rgAlbum")) :
+                                null;
+            } else {
+                song.id = jsonBourne.getLong("id");
 				song.artistId = jsonBourne.getLong("artistId");
 				song.albumId = jsonBourne.getLong("albumId");
 				song.dbPath = null;
@@ -419,6 +423,11 @@ public class Song implements Comparable<Song> {
 			if(this.isCloudSong) {
 				jsonBourne.put("isCloudSong", true);
 				jsonBourne.put("dbPath", this.dbPath);
+                //currently, only cloud songs need to store RG here as local songs
+                //retrieve their RG info on the fly in playbackservice
+                //TODO: unify?
+				jsonBourne.put("rgTrack", this.rgTrack);
+				jsonBourne.put("rgAlbum", this.rgAlbum);
 			} else {
 				jsonBourne.put("isCloudSong", false);
 				jsonBourne.put("id", this.id);
